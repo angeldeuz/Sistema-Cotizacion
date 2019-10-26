@@ -12,6 +12,7 @@ Vue.prototype.$http = axios;
 Vue.prototype.$http.defaults.baseURL = 'http://ec2-174-129-57-180.compute-1.amazonaws.com/backEnd/api/';
 Vue.use(Vuetify);
 Vue.config.productionTip = false;
+//axios.defaults.baseURL='http://ec2-174-129-57-180.compute-1.amazonaws.com/backEnd/api/'
 
 new Vue({
   router,

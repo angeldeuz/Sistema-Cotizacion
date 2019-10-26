@@ -9,6 +9,8 @@ import Servicios from './views/Servicios.vue';
 import Categorias from './views/Categorias.vue';
 import OrdenesCompraProveedores from './views/OrdenesCompraProveedores.vue';
 
+import Usuarios from './views/Usuarios.vue';
+
 Vue.use(Router);
 
 export default new Router({
@@ -49,6 +51,11 @@ export default new Router({
       name: 'categorias',
       path: '/categorias',
       component: Categorias,
+    },
+    {
+      name: 'usuarios',
+      path: '/usuarios',
+      component: Usuarios,
     },
     {
       name: 'ordenesCompraProveedores',
