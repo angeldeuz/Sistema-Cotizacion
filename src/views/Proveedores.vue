@@ -2,7 +2,10 @@
     <v-layout aling-start>
                 <v-flex>
                     <v-toolbar flat color="white">
-                        <v-toolbar-title>Usarios</v-toolbar-title>
+                        <v-toolbar-title>Proveedores
+
+
+                        </v-toolbar-title>
                         <v-divider
                         class="mx-2"
                         inset
@@ -24,24 +27,19 @@
                                 <v-container grid-list-md>
                                     <v-layout wrap>
                                     <v-flex xs12 sm6 md6>
-                                        <v-text-field v-model="usuario" label="Usuario"></v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md6>
-                                        <v-select v-model="Rol"
-                                        :items="roles" label="Rol">
-                                        </v-select>
+                                        <v-text-field v-model="razonSocial" label="Razon Social"></v-text-field>
                                     </v-flex>
                                      <v-flex xs12 sm6 md6>
-                                        <v-text-field type="password" v-model="password" label="Password">
-                                        </v-text-field>
+                                        <v-text-field v-model="diasCredito" label="Dias Credito"></v-text-field>
+                                    </v-flex>
+                                     <v-flex xs12 sm6 md6>
+                                        <v-text-field v-model="RFC" label="RFC"></v-text-field>
+                                    </v-flex>
+                                     <v-flex xs12 sm6 md6>
+                                        <v-text-field v-model="correo" label="Correo"></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md6>
-                                        <v-text-field v-model="telefono" label="Telefono">
-                                        </v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md6>
-                                        <v-text-field v-model="email" label="email">
-                                        </v-text-field>
+                                        <v-text-field v-model="nombreVendedor" label="Nombre Vendedor"></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm12 md12 v-show="valida">
                                         <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
@@ -86,7 +84,7 @@
                 </v-toolbar>
             <v-data-table
                 :headers="headers"
-                :items="usuarios"
+                :items="proveedores"
                 :search="search"
                 class="elevation-1"
             >
@@ -106,10 +104,11 @@
                             </v-icon>
                         </template>      -->
                     </td>
-                        <td>{{ props.item.usuario }}</td>
-                        <td>{{ props.item.rol }}</td>
-                        <td>{{ props.item.idEstatus }}</td>
-                        <td>{{ props.item.fechaRegistro }}</td>
+                        <td>{{ props.item.razonSocial }}</td>
+                        <td>{{ props.item.diasCredito }}</td>
+                        <td>{{ props.item.rfc }}</td>
+                        <td>{{ props.item.correo }}</td>
+                        <td>{{ props.item.nombreVendedor }}</td>
                 </template>
                 <template v-slot:no-data>
                 <v-btn color="primary" @click="listar">Resetear</v-btn>
@@ -124,28 +123,24 @@
     export default {
         data(){
             return{
-                usuarios:[],
+                proveedores:[],
                 dialog: false,
                 headers: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
-                    { text: 'Usuario', value: 'usuario' },
-                    { text: 'Rol', value: 'Rol' },
-                    { text: 'Estatus', value: 'idEstatus' },
-                    { text: 'Fecha de Registro', value: 'fechaRegistro' ,sortable: false},
+                    { text: 'Razon Social', value: 'razonSocial' },
+                    { text: 'Dias Credito', value: 'diasCredito' },
+                    { text: 'RFC', value: 'RFC' ,sortable: false},
+                    { text: 'Correo', value: 'correo' ,sortable: false},
+                    { text: 'Nombre Vendedor', value: 'nombreVendedor' ,sortable: false},
                 ],
                 search: '',
                 editedIndex: -1,
                 id: '',
-                Rol: '',
-                roles:['Administrador','Empleado','Finanzas'],
-                usuario:'',
-                idEstus:'',
-                fechaRegistro:'',
-                telefono:'',
-                email:'',
-                password:'',
-                actPassword:false,
-                passwordAnt:'',
+                razonSocial:'',
+                diasCredito:'',
+                RFC:'',
+                correo:'',
+                nombreVendedor:'',
                 valida:0,
                 validaMensaje:[],
                 adModal:0,
@@ -156,7 +151,7 @@
         },
         computed: {
             formTitle () {
-            return this.editedIndex === -1 ? 'Nuevo usuario' : 'Actualizar usuario'
+            return this.editedIndex === -1 ? 'Nuevo Proveedor' : 'Actualizar Proveedor'
             }
         },
 
@@ -176,9 +171,9 @@
                 let me=this;
                 // let header={"Authorization" : "Bearer " + this.$store.state.token};
                 // let configuracion= {headers : header};
-                axios.get('Usuarios/Listar').then(function(response){
+                axios.get('Proveedores/Listar').then(function(response){
                     //console.log(response);
-                    me.usuarios=response.data;
+                    me.proveedores=response.data;
                 }).catch(function(error){
                     //console.log(error);
                 });
@@ -198,16 +193,12 @@
                 // });
             },
                 editItem (item) {
-                    this.id=item.idusuario;
-                    this.usuario=item.usuario;
-                    //rol pendiente
-                    this.Rol=item.Rol;
-                    this.password=item.password_hash;
-                    // this.direccion=item.direccion;
-                    // this.telefono=item.telefono;
-                    // this.email=item.email;
-                    // this.password=item.password_hash;
-                    // this.passwordAnt = item.password_hash;
+                    // this.id=item.idProveedor;
+                    this.razonSocial=item.razonSocial;
+                    this.diasCredito=item.diasCredito;
+                    this.RFC=item.RFC;
+                    this.correo=item.correo;
+                    this.nombreVendedor=item.nombreVendedor;
                     this.editedIndex=1;
                     this.dialog = true
                 },
@@ -218,17 +209,11 @@
 
                 limpiar(){
                     this.id="";
-                    this.Rol="";
-                    this.usuario="",
-                    this.password="";
-                    // this.tipo_documento="";
-                    // this.num_documento="";
-                    // this.direccion="";
-                    // this.telefono="";
-                    // this.email="";
-                    
-                    this.passwordAnt="";
-                    this.actPassword=false;
+                    this.razonSocial="";
+                    this.diasCredito="";
+                    this.RFC="";
+                    this.correo="";
+                    this.nombreVendedor="";
                     this.editedIndex=-1;
                 },
 
@@ -238,23 +223,15 @@
                     }
                     // let header={"Authorization" : "Bearer " + this.$store.state.token};
                     // let configuracion= {headers : header};
+                    let me =this;
                     if (this.editedIndex > -1) {
-                        //codigo para editar
-                        let me=this;
-                        if (me.password!=me.passwordAnt){
-                            me.actPassword=true;
-                        }
-                        axios.post('Usuarios/Actualizar',{
-                            'idUsuario': me.id,
-                            'usuario': me.usuario,
-                            'idEstatus': 1,
-                            'Rol':'Administrador',
-                            // 'num_documento': me.num_documento,
-                            // 'direccion' : me.direccion,
-                            // 'telefono' : me.telefono,
-                            // 'email': me.email,
-                            'password':me.password,
-                            'act_password':me.actPassword
+                        axios.post('Proveedores/Actualizar',{
+                            'idProveedor': me.id,
+                            'razonSocial': me.razonSocial,
+                            'diasCredito': me.diasCredito,
+                            'RFC': me.RFC,
+                            'nombreVendedor': me.nombreVendedor,
+                            'correo': me.correo
                         }).then(function(response){
                             me.close();
                             me.listar();
@@ -265,15 +242,12 @@
                     } else {
                         //codigo para guardar
                         let me=this;
-                        axios.post('Usuarios/Crear',{
-                            'usuario': me.usuario,
-                            'password': me.password
-                            // 'tipo_documento':me.tipo_documento,
-                            // 'num_documento': me.num_documento,
-                            // 'direccion' : me.direccion,
-                            // 'telefono' : me.telefono,
-                            // 'email': me.email,
-                            // 'password':me.password
+                        axios.post('Proveedores/Crear',{
+                            'razonSocial': me.razonSocial,
+                            'diasCredito': me.diasCredito,
+                            'RFC': me.RFC,
+                            'nombreVendedor': me.nombreVendedor,
+                            'correo': me.correo
                         }).then(function(response){
                             me.close();
                             me.listar();
@@ -287,8 +261,8 @@
                 validar(){
                     this.valida=0;
                     this.validaMensaje=[];
-                    if (this.usuario.length<3 || this.usuario.length >50 ){
-                        this.validaMensaje.push("El usuario debe tener mas de 3 caracteres y menos de 50 caracteres.");
+                    if (this.RFC.length<3 || this.RFC.length >15 ){
+                        this.validaMensaje.push("El empleado debe tener mas de 3 caracteres y menos de 15 caracteres.");
                     }
                     // if(!this.idrol){
                     //     this.validaMensaje.push("Seleccione un rol.")
@@ -300,9 +274,6 @@
                     // if(!this.email){
                     //     this.validaMensaje.push("Ingrese el email del usuario.")
                     // }
-                    if(!this.password){
-                        this.validaMensaje.push("Ingrese el password del usuario.")
-                    }
                     if (this.validaMensaje.length){
                         this.valida=1;
                     }

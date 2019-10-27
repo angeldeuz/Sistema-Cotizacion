@@ -2,7 +2,7 @@
     <v-layout aling-start>
                 <v-flex>
                     <v-toolbar flat color="white">
-                        <v-toolbar-title>Usarios</v-toolbar-title>
+                        <v-toolbar-title>Empleados</v-toolbar-title>
                         <v-divider
                         class="mx-2"
                         inset
@@ -23,25 +23,8 @@
                                 <v-card-text>
                                 <v-container grid-list-md>
                                     <v-layout wrap>
-                                    <v-flex xs12 sm6 md6>
-                                        <v-text-field v-model="usuario" label="Usuario"></v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md6>
-                                        <v-select v-model="Rol"
-                                        :items="roles" label="Rol">
-                                        </v-select>
-                                    </v-flex>
-                                     <v-flex xs12 sm6 md6>
-                                        <v-text-field type="password" v-model="password" label="Password">
-                                        </v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md6>
-                                        <v-text-field v-model="telefono" label="Telefono">
-                                        </v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md6>
-                                        <v-text-field v-model="email" label="email">
-                                        </v-text-field>
+                                    <v-flex xs12 sm12 md12>
+                                        <v-text-field v-model="empleado" label="Empleado"></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm12 md12 v-show="valida">
                                         <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
@@ -86,7 +69,7 @@
                 </v-toolbar>
             <v-data-table
                 :headers="headers"
-                :items="usuarios"
+                :items="empleados"
                 :search="search"
                 class="elevation-1"
             >
@@ -106,9 +89,8 @@
                             </v-icon>
                         </template>      -->
                     </td>
-                        <td>{{ props.item.usuario }}</td>
-                        <td>{{ props.item.rol }}</td>
-                        <td>{{ props.item.idEstatus }}</td>
+                        <td>{{ props.item.empleado }}</td>
+                        <td>{{ props.item.estatus }}</td>
                         <td>{{ props.item.fechaRegistro }}</td>
                 </template>
                 <template v-slot:no-data>
@@ -124,28 +106,21 @@
     export default {
         data(){
             return{
-                usuarios:[],
+                empleados:[],
                 dialog: false,
                 headers: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
-                    { text: 'Usuario', value: 'usuario' },
-                    { text: 'Rol', value: 'Rol' },
-                    { text: 'Estatus', value: 'idEstatus' },
+                    { text: 'Empleado', value: 'empleado' },
+                    { text: 'Estatus', value: 'Estatus' },
                     { text: 'Fecha de Registro', value: 'fechaRegistro' ,sortable: false},
                 ],
                 search: '',
                 editedIndex: -1,
                 id: '',
-                Rol: '',
-                roles:['Administrador','Empleado','Finanzas'],
-                usuario:'',
+                empleado:'',
                 idEstus:'',
                 fechaRegistro:'',
-                telefono:'',
-                email:'',
-                password:'',
-                actPassword:false,
-                passwordAnt:'',
+                estatus:'',
                 valida:0,
                 validaMensaje:[],
                 adModal:0,
@@ -156,7 +131,7 @@
         },
         computed: {
             formTitle () {
-            return this.editedIndex === -1 ? 'Nuevo usuario' : 'Actualizar usuario'
+            return this.editedIndex === -1 ? 'Nuevo empleado' : 'Actualizar empleado'
             }
         },
 
@@ -176,9 +151,9 @@
                 let me=this;
                 // let header={"Authorization" : "Bearer " + this.$store.state.token};
                 // let configuracion= {headers : header};
-                axios.get('Usuarios/Listar').then(function(response){
+                axios.get('Empleadoes/Listar').then(function(response){
                     //console.log(response);
-                    me.usuarios=response.data;
+                    me.empleados=response.data;
                 }).catch(function(error){
                     //console.log(error);
                 });
@@ -198,16 +173,9 @@
                 // });
             },
                 editItem (item) {
-                    this.id=item.idusuario;
-                    this.usuario=item.usuario;
-                    //rol pendiente
-                    this.Rol=item.Rol;
-                    this.password=item.password_hash;
-                    // this.direccion=item.direccion;
-                    // this.telefono=item.telefono;
-                    // this.email=item.email;
-                    // this.password=item.password_hash;
-                    // this.passwordAnt = item.password_hash;
+                    this.id=item.idEmpleado;
+                    console.log(this.id);
+                    this.empleado=item.empleado;
                     this.editedIndex=1;
                     this.dialog = true
                 },
@@ -218,17 +186,7 @@
 
                 limpiar(){
                     this.id="";
-                    this.Rol="";
-                    this.usuario="",
-                    this.password="";
-                    // this.tipo_documento="";
-                    // this.num_documento="";
-                    // this.direccion="";
-                    // this.telefono="";
-                    // this.email="";
-                    
-                    this.passwordAnt="";
-                    this.actPassword=false;
+                    this.empleado="";
                     this.editedIndex=-1;
                 },
 
@@ -238,23 +196,12 @@
                     }
                     // let header={"Authorization" : "Bearer " + this.$store.state.token};
                     // let configuracion= {headers : header};
+                    let me =this;
                     if (this.editedIndex > -1) {
-                        //codigo para editar
-                        let me=this;
-                        if (me.password!=me.passwordAnt){
-                            me.actPassword=true;
-                        }
-                        axios.post('Usuarios/Actualizar',{
-                            'idUsuario': me.id,
-                            'usuario': me.usuario,
-                            'idEstatus': 1,
-                            'Rol':'Administrador',
-                            // 'num_documento': me.num_documento,
-                            // 'direccion' : me.direccion,
-                            // 'telefono' : me.telefono,
-                            // 'email': me.email,
-                            'password':me.password,
-                            'act_password':me.actPassword
+                        axios.post('Empleadoes/Actualizar',{
+                            'idEmpleado': me.id,
+                            'empleado': me.empleado,
+                            'idEstatus': 1
                         }).then(function(response){
                             me.close();
                             me.listar();
@@ -265,15 +212,9 @@
                     } else {
                         //codigo para guardar
                         let me=this;
-                        axios.post('Usuarios/Crear',{
-                            'usuario': me.usuario,
-                            'password': me.password
-                            // 'tipo_documento':me.tipo_documento,
-                            // 'num_documento': me.num_documento,
-                            // 'direccion' : me.direccion,
-                            // 'telefono' : me.telefono,
-                            // 'email': me.email,
-                            // 'password':me.password
+                        axios.post('Empleadoes/Crear',{
+                            'empleado': me.empleado,
+                            'idEstatus': 1
                         }).then(function(response){
                             me.close();
                             me.listar();
@@ -287,8 +228,8 @@
                 validar(){
                     this.valida=0;
                     this.validaMensaje=[];
-                    if (this.usuario.length<3 || this.usuario.length >50 ){
-                        this.validaMensaje.push("El usuario debe tener mas de 3 caracteres y menos de 50 caracteres.");
+                    if (this.empleado.length<3 || this.empleado.length >50 ){
+                        this.validaMensaje.push("El empleado debe tener mas de 3 caracteres y menos de 50 caracteres.");
                     }
                     // if(!this.idrol){
                     //     this.validaMensaje.push("Seleccione un rol.")
@@ -300,9 +241,6 @@
                     // if(!this.email){
                     //     this.validaMensaje.push("Ingrese el email del usuario.")
                     // }
-                    if(!this.password){
-                        this.validaMensaje.push("Ingrese el password del usuario.")
-                    }
                     if (this.validaMensaje.length){
                         this.valida=1;
                     }

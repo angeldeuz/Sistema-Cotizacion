@@ -10,6 +10,8 @@ import Categorias from './views/Categorias.vue';
 import OrdenesCompraProveedores from './views/OrdenesCompraProveedores.vue';
 
 import Usuarios from './views/Usuarios.vue';
+import Empleados from './views/Empleados.vue';
+import Proveedores from './views/Proveedores';
 
 Vue.use(Router);
 
@@ -56,6 +58,16 @@ export default new Router({
       name: 'usuarios',
       path: '/usuarios',
       component: Usuarios,
+    },
+    {
+      name: 'empleados',
+      path: '/empleados',
+      component: Empleados,
+    },
+    {
+      name: 'proveedores',
+      path: '/proveedores',
+      component: Proveedores,
     },
     {
       name: 'ordenesCompraProveedores',
