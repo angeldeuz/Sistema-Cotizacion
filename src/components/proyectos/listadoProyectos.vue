@@ -24,34 +24,40 @@
              span Editar
             v-tooltip(bottom)
              template(v-slot:activator="{ on }")
-              v-icon(small v-on="on" @click.prevent="mostrar_cotizacion(props.item)") assignment
+              v-icon(small v-on="on" @click.prevent="mostrar_ah(props.item)") assignment
              span Asignar horas
   VistaPreviaCotizacion(
     @cerrar_modal="mostrarVistaPrevia = !mostrarVistaPrevia"
     :mostrarVistaPrevia="mostrarVistaPrevia"
     :cotizacion="cotizacionSeleccionada")
   AsignarHoras(
-    :mostrarAH="mostrarAH"
+    :mostrarAH="mostrarAH" 
+    :cotizacion="cotizacionSeleccionada"
+     @cerrar_modal="mostrarAH = !mostrarAH"
+     @shown="displayNotif($event)"
   )
+  SNotification(ref="notif")
 </template>
 
 <script>
-import HEADERS_PROYECTOS from '@/headers/proyectos';
-import VistaPreviaCotizacion from '@/components/proyectos/VistaPreviaCotizacion/vistaPreviaCotizacion.vue';
-import AsignarHoras from '@/components/proyectos/AsignarHoras/AsignarHoras.vue';
+import HEADERS_PROYECTOS from "@/headers/proyectos";
+import VistaPreviaCotizacion from "@/components/proyectos/VistaPreviaCotizacion/vistaPreviaCotizacion.vue";
+import AsignarHoras from "@/components/proyectos/AsignarHoras/AsignarHoras.vue";
+import SNotification from "@/components/proyectos/AsignarHoras/SNotification.vue";
 
 export default {
-  name: 'ListadoProyectos',
-  components: { VistaPreviaCotizacion, AsignarHoras },
+  name: "ListadoProyectos",
+  components: { VistaPreviaCotizacion, AsignarHoras, SNotification },
   data() {
     return {
       mostrarAH: false,
-      buscar: '',
+      buscar: "",
       headers: HEADERS_PROYECTOS,
       loading: true,
       proyectos: [],
       mostrarVistaPrevia: false,
       cotizacionSeleccionada: null,
+      fmodal: false
     };
   },
   beforeMount() {
@@ -60,17 +66,22 @@ export default {
   methods: {
     obtener_proyectos() {
       const self = this;
-      self.$http.get('Cotizaciones/Listado')
+      self.$http
+        .get("Cotizaciones/Listado")
         .then(({ data, status }) => {
           if (status === 200) {
             self.proyectos = data;
             self.loading = false;
           }
-        }).catch((error) => { console.error(error); });
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     mostrar_cotizacion({ idCotizacion }) {
       const self = this;
-      self.$http.get(`Cotizaciones/Mostrar/${idCotizacion}`)
+      self.$http
+        .get(`Cotizaciones/Mostrar/${idCotizacion}`)
         .then(({ status, data }) => {
           if (status === 200) {
             self.cotizacionSeleccionada = data;
@@ -78,7 +89,21 @@ export default {
           }
         });
     },
-  },
+    mostrar_ah({ idCotizacion }) {
+      const self = this;
+      self.$http
+        .get(`Cotizaciones/Mostrar/${idCotizacion}`)
+        .then(({ status, data }) => {
+          if (status === 200) {
+            self.cotizacionSeleccionada = data;
+            self.mostrarAH = true;
+          }
+        });
+    },
+    displayNotif(e) {
+      this.$refs['notif'].showNotif(e);
+    }
+  }
 };
 </script>
 

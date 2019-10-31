@@ -35,6 +35,7 @@
 import Menu from '@/template/menu.vue';
 import TopNav from '@/template/top-nav.vue';
 import 'vuetify/dist/vuetify.min.css';
+// test
 
 export default {
   name: 'app',
