@@ -78,6 +78,9 @@ export default {
       {
         title: 'Empleados', icon: 'fas fa-people-carry', action: '', path: '/empleados',
       },
+      {
+        title: 'Plantilla', icon: 'fas fa-people-carry', action: '', path: '/plantillas',
+      },
     ],
   }),
 };

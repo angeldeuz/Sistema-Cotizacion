@@ -12,6 +12,10 @@ import OrdenesCompraProveedores from './views/OrdenesCompraProveedores.vue';
 import Usuarios from './views/Usuarios.vue';
 import Empleados from './views/Empleados.vue';
 import Proveedores from './views/Proveedores';
+import Plantillas from './views/Plantillas';
+import Login from './views/Login';
+
+import store from './store'
 
 Vue.use(Router);
 
@@ -70,9 +74,44 @@ export default new Router({
       component: Proveedores,
     },
     {
+      name: 'plantillas',
+      path: '/plantillas',
+      component: Plantillas,
+    },
+    {
+      name: 'login',
+      path: '/login',
+      component: Login,
+    },
+    {
       name: 'ordenesCompraProveedores',
       path: '/ordenes-compra-proveedores',
       component: OrdenesCompraProveedores,
     },
   ],
-});
+})
+
+// router.beforeEach((to, from, next)=>{
+//   if (to.matched.some(record => record.meta.libre)){
+//     next()
+//   }else if (store.state.usuario && store.state.usuario.rol == 'Administrador'){
+//     if(to.matched.some(record => record.meta.administrador)){
+//       next()
+//     }
+//   }else if (store.state.usuario && store.state.usuario.rol == 'Almacenero'){
+//     if(to.matched.some(record => record.meta.almacenero)){
+//       next()
+//     }
+//   }
+//   else if (store.state.usuario && store.state.usuario.rol == 'Vendedor'){
+//     if(to.matched.some(record => record.meta.vendedor)){
+//       next()
+//     }
+//   }else{
+//     next({
+//       name: 'login'
+//     })
+//   }
+// })
+
+// export default router

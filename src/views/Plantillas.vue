@@ -2,10 +2,7 @@
     <v-layout aling-start>
                 <v-flex>
                     <v-toolbar flat color="white">
-                        <v-toolbar-title>Proveedores
-
-
-                        </v-toolbar-title>
+                        <v-toolbar-title>Plantillas</v-toolbar-title>
                         <v-divider
                         class="mx-2"
                         inset
@@ -26,20 +23,11 @@
                                 <v-card-text>
                                 <v-container grid-list-md>
                                     <v-layout wrap>
-                                    <v-flex xs12 sm6 md6>
-                                        <v-text-field v-model="razonSocial" label="Razon Social"></v-text-field>
+                                    <v-flex xs12 sm12 md12>
+                                        <v-text-field v-model="nombre" label="Nombre Plantilla"></v-text-field>
                                     </v-flex>
-                                     <v-flex xs12 sm6 md6>
-                                        <v-text-field v-model="diasCredito" label="Dias Credito"></v-text-field>
-                                    </v-flex>
-                                     <v-flex xs12 sm6 md6>
-                                        <v-text-field v-model="RFC" label="RFC"></v-text-field>
-                                    </v-flex>
-                                     <v-flex xs12 sm6 md6>
+                                    <v-flex xs12 sm12 md12>
                                         <v-text-field v-model="correo" label="Correo"></v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md6>
-                                        <v-text-field v-model="nombreVendedor" label="Nombre Vendedor"></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm12 md12 v-show="valida">
                                         <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
@@ -84,7 +72,7 @@
                 </v-toolbar>
             <v-data-table
                 :headers="headers"
-                :items="proveedores"
+                :items="plantillas"
                 :search="search"
                 class="elevation-1"
             >
@@ -104,11 +92,10 @@
                             </v-icon>
                         </template>      -->
                     </td>
-                        <td>{{ props.item.razonSocial }}</td>
-                        <td>{{ props.item.diasCredito }}</td>
-                        <td>{{ props.item.rfc }}</td>
+                        <td>{{ props.item.nombre }}</td>
                         <td>{{ props.item.correo }}</td>
-                        <td>{{ props.item.nombreVendedor }}</td>
+                        <td>{{ props.item.estatus }}</td>
+                        <td>{{ props.item.fechaRegistro }}</td>
                 </template>
                 <template v-slot:no-data>
                 <v-btn color="primary" @click="listar">Resetear</v-btn>
@@ -123,24 +110,23 @@
     export default {
         data(){
             return{
-                proveedores:[],
+                plantillas:[],
                 dialog: false,
                 headers: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
-                    { text: 'Razon Social', value: 'razonSocial' },
-                    { text: 'Dias Credito', value: 'diasCredito' },
-                    { text: 'RFC', value: 'RFC' ,sortable: false},
-                    { text: 'Correo', value: 'correo' ,sortable: false},
-                    { text: 'Nombre Vendedor', value: 'nombreVendedor' ,sortable: false},
+                    { text: 'Plantilla', value: 'nombre' },
+                    { text: 'Correo', value: 'correo' },
+                    { text: 'Estatus de la plantilla', value: 'estatus' ,sortable: false},
+                    { text: 'Fecha de registro', value: 'fechaRegistro' ,sortable: false},
                 ],
                 search: '',
                 editedIndex: -1,
                 id: '',
-                razonSocial:'',
-                diasCredito:'',
-                RFC:'',
+                nombre:'',
+                idEstus:'',
+                fechaRegistro:'',
+                estatus:'',
                 correo:'',
-                nombreVendedor:'',
                 valida:0,
                 validaMensaje:[],
                 adModal:0,
@@ -151,7 +137,7 @@
         },
         computed: {
             formTitle () {
-            return this.editedIndex === -1 ? 'Nuevo Proveedor' : 'Actualizar Proveedor'
+            return this.editedIndex === -1 ? 'Nueva Plantilla' : 'Actualizar Plantilla'
             }
         },
 
@@ -171,9 +157,9 @@
                 let me=this;
                 // let header={"Authorization" : "Bearer " + this.$store.state.token};
                 // let configuracion= {headers : header};
-                axios.get('Proveedores/Listar').then(function(response){
+                axios.get('Plantillas/Listar').then(function(response){
                     //console.log(response);
-                    me.proveedores=response.data;
+                    me.plantillas=response.data;
                 }).catch(function(error){
                     //console.log(error);
                 });
@@ -193,12 +179,9 @@
                 // });
             },
                 editItem (item) {
-                    this.id=item.idProveedor;
-                    this.razonSocial=item.razonSocial;
-                    this.diasCredito=item.diasCredito;
-                    this.RFC=item.RFC;
+                    this.id=item.idPlantilla;
+                    this.nombre=item.nombre;
                     this.correo=item.correo;
-                    this.nombreVendedor=item.nombreVendedor;
                     this.editedIndex=1;
                     this.dialog = true
                 },
@@ -209,11 +192,8 @@
 
                 limpiar(){
                     this.id="";
-                    this.razonSocial="";
-                    this.diasCredito="";
-                    this.RFC="";
+                    this.nombre="";
                     this.correo="";
-                    this.nombreVendedor="";
                     this.editedIndex=-1;
                 },
 
@@ -225,13 +205,11 @@
                     // let configuracion= {headers : header};
                     let me =this;
                     if (this.editedIndex > -1) {
-                        axios.post('Proveedores/Actualizar',{
-                            'idProveedor': me.id,
-                            'razonSocial': me.razonSocial,
-                            'diasCredito': me.diasCredito,
-                            'RFC': me.RFC,
-                            'nombreVendedor': me.nombreVendedor,
-                            'correo': me.correo
+                        axios.post('Plantillas/Actualizar',{
+                            'idPlantilla': me.id,
+                            'nombre': me.nombre,
+                            'correo': me.correo,
+                            'idEstatus': 1
                         }).then(function(response){
                             me.close();
                             me.listar();
@@ -242,12 +220,10 @@
                     } else {
                         //codigo para guardar
                         let me=this;
-                        axios.post('Proveedores/Crear',{
-                            'razonSocial': me.razonSocial,
-                            'diasCredito': me.diasCredito,
-                            'RFC': me.RFC,
-                            'nombreVendedor': me.nombreVendedor,
-                            'correo': me.correo
+                        axios.post('Plantillas/Crear',{
+                            'nombre': me.nombre,
+                            'correo': me.correo,
+                            'idEstatus': 1
                         }).then(function(response){
                             me.close();
                             me.listar();
@@ -261,8 +237,8 @@
                 validar(){
                     this.valida=0;
                     this.validaMensaje=[];
-                    if (this.RFC.length<3 || this.RFC.length >15 ){
-                        this.validaMensaje.push("El empleado debe tener mas de 3 caracteres y menos de 15 caracteres.");
+                    if (this.nombre.length<1 || this.nombre.length >50 ){
+                        this.validaMensaje.push("El empleado debe tener mas de 3 caracteres y menos de 50 caracteres.");
                     }
                     // if(!this.idrol){
                     //     this.validaMensaje.push("Seleccione un rol.")
