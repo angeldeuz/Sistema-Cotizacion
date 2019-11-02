@@ -1,4 +1,5 @@
 # sistema-cotizacion
+Front End de aplicacion web de un sistema de cotizacion para una empresa del sector en tecnologias encargada de brindar cableado de infrestructura de red
 
 ## Project setup
 ```
